@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"simple-server-go/api/http/handle"
 	"simple-server-go/api/http/middle"
 	"simple-server-go/init/global"
 	"simple-server-go/internal/endpoint"
@@ -17,9 +18,7 @@ func NewHttp(e *endpoint.Endpoints, m *middle.Middleware) *http.Server {
 	ginEngine.Use(middleware.Error, middleware.LoggerFormate())
 	api := ginEngine.Group("/api/simple")
 
-	api.GET("health", func(c *gin.Context) {
-		c.AbortWithStatus(200)
-	})
+	handle.HealthBluePrint(api, e, m)
 
 	s := &http.Server{
 		Addr:    fmt.Sprintf(":%d", global.Config.Server.Http.Port),
